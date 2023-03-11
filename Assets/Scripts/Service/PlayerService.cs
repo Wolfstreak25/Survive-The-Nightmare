@@ -1,18 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class PlayerService : MonoBehaviour
+public class PlayerService : Singleton<PlayerService>
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    [SerializeField] private PlayerList PlayerObjectList;
+    public void PlayerSpawn(int i)
+    { 
+        PlayerModel PlayerModel = new PlayerModel(PlayerObjectList.Players[i]);
+        PlayerController PlayerController = new PlayerController(PlayerModel, PlayerObjectList.Players[i].PlayerView);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+    private void Start() {
+        PlayerSpawn(0);
     }
 }
