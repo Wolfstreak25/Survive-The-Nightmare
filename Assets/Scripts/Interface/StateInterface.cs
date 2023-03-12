@@ -1,4 +1,4 @@
-public interface StateInterface<T>
+public abstract class StateInterface<T>
 {
     public virtual void OnEnterState(T ObjectState)
     {}

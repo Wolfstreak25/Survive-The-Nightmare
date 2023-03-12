@@ -16,5 +16,6 @@ public class EnemyObject : ScriptableObject
    public int Damage;
    [Header("Detection parameters")]
    public float EngageRadius;
+   public float AttackRadius;
    public float attackDelay;
 }
