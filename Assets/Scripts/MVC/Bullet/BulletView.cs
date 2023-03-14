@@ -13,7 +13,7 @@ public class BulletView : MonoBehaviour
     private void OnCollisionEnter(Collision other) {
         
         StartCoroutine(DestroyBullet());
-        bulletController.bulletContact();
+        bulletController.bulletContact(other.transform);
     }
     public IEnumerator DestroyBullet()
     {

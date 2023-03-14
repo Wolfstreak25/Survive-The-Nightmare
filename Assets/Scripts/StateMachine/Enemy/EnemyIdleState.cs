@@ -4,8 +4,8 @@ public class EnemyIdleState : EnemyStateMachine
 {
     public override void OnEnterState(EnemyController stateObject)
     {
-        Debug.Log("Idle State");
         base.OnEnterState(stateObject);
+        enemy.thisState = EnemyState.IdleState;
         timeElapsed = 0f;
     }
     public override void UpdateState()
@@ -13,7 +13,7 @@ public class EnemyIdleState : EnemyStateMachine
         timeElapsed += Time.deltaTime;
         if (timeElapsed >= 1)
         {
-            ChangeState(EnemyState.PatrolState);
+            base.ChangeState(EnemyState.PatrolState);
         }
     }
 }

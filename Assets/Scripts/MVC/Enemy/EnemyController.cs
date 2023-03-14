@@ -8,8 +8,15 @@ public class EnemyController
     public EnemyView View{get; private set;}
     // DATA from View
     public Rigidbody rb;
-    private NavMeshAgent navAI;
+    public NavMeshAgent navAI;
     public Animator animator{get;}
+    public EnemyState thisState{get;set;}
+    public bool isKilled{get;private set;}
+    public LayerMask layerMask;
+    public Transform Player;
+    public bool playerDetected{get; private set;}
+    public bool playerInRange{get; private set;}
+    public Transform[] PatrolPoints;
     // Independent DATA
     private EnemyStateMachine currentState;
     public StateMachine<EnemyController> stateMachine;
@@ -34,19 +41,20 @@ public class EnemyController
         currentState = new EnemyIdleState();
     }
     // Initial Activation of GameObject
-    public void  ActivateEnemy(Transform spawn)
+    public void  ActivateEnemy(Transform[] spawn)
     {
-        Debug.Log("Activating enemy State call");
+        isKilled = false;
+        PatrolPoints = spawn;
         // Activate View
         View.gameObject.SetActive(true);
         // Change to Spawn Location
-        View.transform.position = spawn.position;
+        View.transform.position = PatrolPoints[UnityEngine.Random.Range(0,PatrolPoints.Length)].position;
         // Set Health to max
         Model.RestoreHealth();
         // Set CurrentState to Idle State
         
         stateMachine.ChangeState(currentState);
-        Debug.Log("After Change State call");
+
     }
     // Receiving Damage From 
     public void GetDamage(float damage, DamagableType type)
@@ -57,10 +65,47 @@ public class EnemyController
         if(Model.Health <= 0)
         {
             EventManagement.Instance.EnemyDeath();
+            isKilled = true;
             animator.SetTrigger("Dead");
             // Animation Event View.StartSinking Will be Called While Animation Is playing
+            // set collider as disabled
+            View.gameObject.GetComponent<CapsuleCollider>().enabled = false;
         }
     }
+    public bool PlayerDetected()
+    {
+        Vector3 origin = View.transform.position;
+        var inCollid = Physics.OverlapSphere(origin, Model.EngageRadius,layerMask);
+        foreach (var coll in inCollid)
+        {
+            if (coll.gameObject.transform.GetComponent<PlayerView>())
+            {
+                Player = coll.gameObject.transform;
+                playerDetected = true;
+                return playerDetected;
+            }
+        }
+        return playerDetected = false;
+    }
+    public bool PlayerInRange()
+    {
+        Vector3 origin = View.transform.position;
+        var inCollid = Physics.OverlapSphere(origin, Model.AttackRadius,layerMask);
+        foreach (var coll in inCollid)
+        {
+            if (coll.gameObject.transform.GetComponent<PlayerView>())
+            {
+                playerInRange = true;
+                return playerInRange;
+            }
+        }
+        return playerInRange = false;
+    }
+    public Vector3 RandomPatrol()
+    {
+        return PatrolPoints[UnityEngine.Random.Range(0,PatrolPoints.Length)].position;
+    }
+
     public void DestroyObj() 
     {
         currentState.ChangeState(EnemyState.DeathState);

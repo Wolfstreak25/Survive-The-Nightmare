@@ -8,26 +8,27 @@ public class EnemyDeathState : EnemyStateMachine
     public override void OnEnterState(EnemyController stateObject)
     {
         base.OnEnterState(stateObject);
-        Debug.Log("Change State");
+        isSinking = false;
         timeElapsed = 0;
     }
     public override void UpdateState() 
     { 
         timeElapsed += Time.deltaTime;
-        if(timeElapsed >= 2f)
+        if(!isSinking && timeElapsed >= 2f)
         {
             Sinking();
         }
-        if(timeElapsed >= 1f && isSinking)
+        if(isSinking && timeElapsed >= 1f)
         {
             RemoveSequence();
         }
     }
     private void RemoveSequence()
     {
-        enemy.View.gameObject.GetComponent<CapsuleCollider>().isTrigger = false;
+        enemy.View.gameObject.GetComponent<CapsuleCollider>().enabled = true;
         enemy.View.gameObject.SetActive(false);
         EnemyPool.Instance.ReturnItem(enemy);
+        return;
     }
     private void Sinking()
     {

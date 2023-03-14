@@ -19,4 +19,5 @@ MonoBehaviour:
   Health: 50
   Damage: 5
   EngageRadius: 10
-  attackDelay: 1
+  AttackRadius: 4
+  attackDelay: 0.75

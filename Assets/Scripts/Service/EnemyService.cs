@@ -21,7 +21,7 @@ public class EnemyService : Singleton<EnemyService>
     private void PlayerSpawn(int i)
     {
         enemy = pool.GetPlayer(ObjectList.Enemy[i]);
-        enemy.ActivateEnemy(spawn[Random.Range(0,spawn.Length)]);
+        enemy.ActivateEnemy(spawn);
     }
     private void EnemyWaves(int currentWave)
     {

@@ -5,41 +5,38 @@ public class EnemyAttackState : EnemyStateMachine
     public override void OnEnterState(EnemyController stateObject)
     {
         base.OnEnterState(stateObject);
-        Debug.Log("Attack State");
+        enemy.thisState = EnemyState.AttackState;
         timeElapsed = 0;
     }
     
     public override void UpdateState() 
     {
-        if(PlayerInRange())
+        if(enemy.PlayerInRange())
             {
                 //attack player
                 timeElapsed += Time.deltaTime;
                 base.UpdateState();
-                if(timeElapsed >= 1)
+                if(timeElapsed >= enemy.Model.AttackDelay)
                 {
-                    Attack(Target);
+                    Attack(enemy.Player);
                 }
             }
-        ChangeState(EnemyState.ChaseState);
+        else
+        {
+             base.ChangeState(EnemyState.ChaseState);
+        }
+        
     }
     void Attack(Transform target)
     {
-        timeElapsed = 0;
-        Target.GetComponent<IDamagable>().GetDamage(enemy.Model.damage, DamagableType.Enemy);
-    }
-    private bool PlayerInRange()
-    {
-        Vector3 origin = enemy.View.transform.position;
-        var inCollid = Physics.OverlapSphere(origin, enemy.Model.AttackRadius); // layermask needed for precision
-        foreach (var collissions in inCollid)
+        if(!target.GetComponent<IDamagable>().isDead())
         {
-            if( collissions.GetComponent<PlayerView>())
-            {
-                Target = collissions.gameObject.transform;
-                return true;
-            }
+            timeElapsed = 0;
+            target.GetComponent<IDamagable>().GetDamage(enemy.Model.damage, DamagableType.Enemy);
         }
-        return false;
+        else
+        {
+            base.ChangeState(EnemyState.IdleState);
+        }
     }
 }

@@ -17,6 +17,7 @@ MonoBehaviour:
   EnemyType: 2
   Speed: 10
   Health: 100
-  Damage: 10
+  Damage: 15
   EngageRadius: 15
-  attackDelay: 1.5
+  AttackRadius: 5
+  attackDelay: 1.25

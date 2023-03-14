@@ -5,6 +5,7 @@ public class PlayerController
     private DamagableType Type;
     public PlayerModel Model{get; private set;}
     public PlayerView View{get; private set;}
+    public bool isKilled{get;private set;}
     private Rigidbody rb;
     private Button FireButton;
     private int countBullet;
@@ -18,6 +19,7 @@ public class PlayerController
     }
     public PlayerController(PlayerModel Playermodel, PlayerView _view)
     {
+        isKilled = false;
         this.Model = Playermodel;
         View = GameObject.Instantiate<PlayerView>(_view);
         rb = View.GetComponent<Rigidbody>();
@@ -67,6 +69,7 @@ public class PlayerController
         Model.Health -= damage;
         if(Model.Health <= 0)
         {
+            isKilled = true;
             View.DestroyObj();
             EventManagement.Instance.PlayerDeath();
         }

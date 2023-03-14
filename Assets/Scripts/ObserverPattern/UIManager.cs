@@ -5,16 +5,19 @@ using System.Threading.Tasks;
 
     public class UIManager : Singleton<UIManager>
     {
+        [Header("Acheivement Panel")]
         [SerializeField] private GameObject AcheivementPanel;
+        [SerializeField] private TextMeshProUGUI Achievement;
+        [SerializeField] private TextMeshProUGUI WaveStatus;
+        [Header("Update Panel")]
         [SerializeField] private GameObject UpdatePanel;
         [SerializeField] private TextMeshProUGUI Ammo;
         [SerializeField] private TextMeshProUGUI Score;
         [SerializeField] private TextMeshProUGUI Kills;
-        [SerializeField] private TextMeshProUGUI WaveStatus;
-        [SerializeField] private TextMeshProUGUI Achievement;
+        [Header("Game Status Panel")]
         [SerializeField] private GameObject GameStatusPanel;
         [SerializeField] private TextMeshProUGUI GameStatus;
-        [SerializeField] private int TotalBulletCount = 10;
+        //[SerializeField] private int TotalBulletCount = 10;
         private int KillCount = 0;
         private int score = 0;
         private void Start()
@@ -33,7 +36,7 @@ using System.Threading.Tasks;
         }
         public void BulletCount(PlayerController controller)
         {
-            if(controller.Model.Ammo >0)
+            if(controller.Model.Ammo > 0)
             {
                 Ammo.text = $"Ammo [{controller.Model.Ammo}]";
             }
@@ -41,7 +44,6 @@ using System.Threading.Tasks;
             {
                 Ammo.text = $"Empty";
             }
-            
         }
         public void EnemyDeath()
         {
@@ -50,32 +52,33 @@ using System.Threading.Tasks;
             Score.text = $"Score: {score}";
             Kills.text = $"Kill: {KillCount}";
         }
+        public void PlayerDeath()
+        {
+            Time.timeScale = 0;
+            GameStatusPanel.SetActive(true);
+            GameStatus.text = "Game Over";
+        }
         public async void WaveComplete(int wave)
         {
             AcheivementPanel.SetActive(true);
+            WaveStatus.gameObject.SetActive(true);
             WaveStatus.text = wave + " Wave Complete";
-            await Task.Delay(10);
+            await Task.Delay(2000);
+            WaveStatus.gameObject.SetActive(false);
             AcheivementPanel.SetActive(false);
             if(wave == 6)
             {
                 GameStatusPanel.SetActive(true);
                 GameStatus.text = "Level Complete";
             }
-
-        }
-        public void PlayerDeath()
-        {
-            GameStatusPanel.SetActive(true);
-            GameStatus.text = "Game Over";
         }
         public IEnumerator ShowAchievement(string achievement)
         {
             AcheivementPanel.SetActive(true);
-            Achievement.enabled = true;
+            WaveStatus.gameObject.SetActive(true);
             Achievement.text = achievement;
-            
             yield return new  WaitForSeconds(2f);
-            Achievement.enabled = false;
+            WaveStatus.gameObject.SetActive(false);
             AcheivementPanel.SetActive(false);
         }
         

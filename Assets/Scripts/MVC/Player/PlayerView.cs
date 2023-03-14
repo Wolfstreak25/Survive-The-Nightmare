@@ -35,4 +35,8 @@ public class PlayerView : MonoBehaviour, IDamagable
     {
        Controller.GetDamage(damage, type);
     }
+    public bool isDead()
+    {
+        return Controller.isKilled;
+    }
 }

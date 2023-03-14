@@ -6,20 +6,19 @@ public class EnemyChaseState : EnemyStateMachine
     public override void OnEnterState(EnemyController stateObject)
     {
         base.OnEnterState(stateObject);
+        enemy.thisState = EnemyState.ChaseState;
         Chase();
     }
     public override void UpdateState() 
     { 
         if(agent.remainingDistance <= agent.stoppingDistance) //done with path
         {
-            ChangeState(EnemyState.AttackState);
+           base.ChangeState(EnemyState.AttackState);
         }
     }
     void Chase()
     {
         Anim.SetTrigger("PlayerDetected");
-        agent.stoppingDistance = 1; // Controller.Model.AttackDistance - 1;
-        agent.SetDestination(Target.position);
+        agent.SetDestination(enemy.Player.position);
     }
 }
-

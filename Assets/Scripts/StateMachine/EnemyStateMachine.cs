@@ -9,18 +9,18 @@ public class EnemyStateMachine : StateInterface<EnemyController>
     protected EnemyController enemy;
     protected NavMeshAgent agent;
     protected Animator Anim;
-    protected Transform Target;
     private EnemyStateMachine currentState;
     private StateMachine<EnemyController> stateMachine;
+    private EnemyState currState;
     private void Start() 
     {
         stateMachine = new StateMachine<EnemyController>(enemy);
     }
-    
     protected void ObjectInitialization(EnemyController stateObject)
     {
         enemy = stateObject;
         Anim = enemy.animator;
+        agent = enemy.navAI;
         stateMachine = enemy.stateMachine;
     }
     public override void OnEnterState(EnemyController ObjectState)
@@ -29,11 +29,15 @@ public class EnemyStateMachine : StateInterface<EnemyController>
     }
     public  override void OnExitState(EnemyController ObjectState)
     {
-        GenericPool<EnemyStateMachine>.Release(currentState);
+        if(currentState != null)
+        {
+            GenericPool<EnemyStateMachine>.Release(currentState);
+        }
+        
     }
     public void ChangeState(EnemyState newState)
     {
-        Debug.Log("Change State");
+        if (enemy.thisState == newState) { return; };
         switch(newState)
         {
             case EnemyState.IdleState:
@@ -52,6 +56,7 @@ public class EnemyStateMachine : StateInterface<EnemyController>
                 currentState = GenericPool<EnemyDeathState>.Get();
                 break;
         }
-        stateMachine.ChangeState(currentState);
+        enemy.thisState = newState;
+        enemy.stateMachine.ChangeState(currentState);
     }
 }

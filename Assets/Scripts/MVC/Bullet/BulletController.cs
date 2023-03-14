@@ -23,22 +23,12 @@ public class BulletController
     {
         return bulletModel;
     }
-    public void bulletContact()
+    public void bulletContact(Transform other)
     {
-        Collider[] colliders = Physics.OverlapSphere(rb.transform.position, bulletModel.ExplosionRadius);
-        for(int i = 0; i<colliders.Length; i++)
+        var target =  other.gameObject.GetComponent<IDamagable>();
+        if(target != null)
         {
-            var targetPlayer = colliders[i].GetComponent<EnemyView>();
-            if(!targetPlayer)
-            {
-                continue;
-            }
-            if(targetPlayer != null)
-            {
-                Debug.Log("enemy hit");
-                targetPlayer.GetDamage(bulletModel.Damage,shooterType);
-            }
-            bulletView.DestroyBullet();
+            target.GetDamage(bulletModel.Damage,shooterType);
         }
     }
     public void ActivateObject(Transform spawn, DamagableType type)
