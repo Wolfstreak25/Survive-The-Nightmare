@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c120a17937663945b9e0d9d4706bd28, type: 3}
+  m_Name: ZomBear
+  m_EditorClassIdentifier: 
+  Type: 1
+  View: {fileID: 9066703141851474486, guid: 554575376777ccb48a52ea54ae4d4de4, type: 3}
+  EnemyType: 0
+  Speed: 15
+  Health: 75
+  Damage: 10
+  EngageRadius: 12
+  AttackRadius: 3
+  attackDelay: 1
